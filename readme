@@ -1,0 +1,6 @@
+a simple makefile for zynqmp
+
+yocto only used for create crosstool
+
+buildroot used for a simple rootfs
+

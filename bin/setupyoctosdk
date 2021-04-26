@@ -1,0 +1,10 @@
+if [ ! -d $ROOT_DIR/configs/yocto_conf ]
+then
+    echo "$ROOT_DIR/configs/yocto_conf missing, error"
+    exit 1
+fi
+
+export TEMPLATECONF=$ROOT_DIR/configs/yocto_conf
+source $ROOT_DIR/sources/core/oe-init-build-env "$@"
+
+

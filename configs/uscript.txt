@@ -1,0 +1,6 @@
+
+if test ${reset_reason} = PS-ONLY; then
+    echo "warm boot now";
+else
+    echo "cold boot now"
+fi;

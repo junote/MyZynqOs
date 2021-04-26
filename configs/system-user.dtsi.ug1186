@@ -1,0 +1,465 @@
+/include/ "system-conf.dtsi"
+#include "dt-bindings/input/input.h"
+#include "dt-bindings/gpio/gpio.h"
+#include "dt-bindings/pinctrl/pinctrl-zynqmp.h"
+#include "dt-bindings/phy/phy.h"
+
+/ {
+
+        amba {
+                /* ethernet@ff0b0000 { */
+                /*         status = "okay"; */
+			/* phy-mode = "sgmii"; */
+			/* local-mac-address = [ 00 0a 35 00 22 01 ]; */
+			/* is-internal-pcspma; */
+			/* fixed-link  = <0 1 1000 0 0>; */
+                /* }; */
+		/* ethernet@ff0b0000{ */
+           /* phy-mode = "gmii"; */
+           /* status = "okay"; */
+           /* fixed-link { */
+               /* speed = <1000>; */
+               /* full-duplex = <1>; */
+                /* /1* reg = <1>; *1/ */
+           /* }; */
+        /* }; */
+
+
+		spi@ff0f0000 {
+            /* has-io-mode; */
+			flash@0 {
+				compatible = "s25fl512s\0n25q512a13";
+				reg = < 0x00 >;
+				#address-cells = < 0x01 >;
+				#size-cells = < 0x01 >;
+				spi-max-frequency = < 24000000 >;
+				spi-rx-bus-width = < 0x04 >;
+				spi-tx-bus-width = < 0x01 >;
+
+				partition@entire {
+					label = "Entire Flash";
+					reg = < 0x00000000 0x4000000 >;
+				};
+
+                partition@00000000 {
+                    label = "ISK #1";
+                    reg = < 0x00000000 0x40000 >;
+                };
+
+				partition@00040000 {
+					label = "BOOT.BIN #1";
+					reg = < 0x00040000 0xa00000 >;
+				};
+
+                partition@00a40000 {
+                    label = "ISK #2";
+                    reg = < 0x00a40000 0x40000 >;
+                };
+
+				partition@00a80000 {
+					label = "BOOT.BIN #2";
+					reg = < 0x00a80000 0xa00000 >;
+				};
+
+				partition@01480000 {
+					label = "bootenv #1";
+					reg = < 0x01480000 0x40000 >;
+				};
+
+				partition@014c0000 {
+					label = "uscript #1";
+					reg = < 0x014c0000 0x40000 >;
+				};
+
+				partition@01500000 {
+					label = "log #1";
+					reg = < 0x01500000 0x40000 >;
+				};
+
+				partition@01540000 {
+					label = "bootenv #2";
+					reg = < 0x01540000 0x40000 >;
+				};
+
+				partition@01580000 {
+					label = "uscript #2";
+					reg = < 0x01580000 0x40000 >;
+				};
+
+				partition@015c0000 {
+					label = "log #2";
+					reg = < 0x015c0000 0x40000 >;
+				};
+
+				partition@01600000 {
+					label = "qboot";
+					reg = < 0x01600000 0x1a00000 >;
+				};
+
+				partition@03000000 {
+					label = "FDR";
+					reg = < 0x03000000 0x1000000 >;
+				};
+			};
+		};
+                /delete-node/ perf-monitor@ffa00000;
+                /delete-node/ perf-monitor@fd490000;
+
+		spi@ff040000 {
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_spi0_default>;
+                        spidev@0 {
+				compatible = "rohm,dh2228fv";
+				reg = <0>; 
+				spi-max-frequency = <20000000>;
+				spi-cpha;
+				spi-cpol;
+			};
+                };
+
+		};
+
+     /* &ethernet0 { */
+     /*       phy-mode = "gmii"; */
+     /*       status = "okay"; */
+     /*       fixed-link { */
+     /*           speed = <1000>; */
+     /*           full-duplex = <1>; */
+     /*            /1* reg = <1>; *1/ */
+     /*       }; */
+     /*    }; */
+
+	amba_pl@0 {
+		/*
+		PL_PS_Group0: GIC IRQ 121 to 128
+		PL_PS_Group1: GIC IRQ 136 to 143
+
+		interrupts = < spi, index, trigger >
+		spi:
+			0 = interrupt is specific to a single processor
+			1 = interrupt can be routed to any specified processors
+		index:
+			if non-spi, index = IRQ - 32
+			if spi, index = IRQ - 16
+		trigger:
+			1 = low-to-high edge triggered
+			2 = high-to-low edge triggered
+			4 = active high level-sensitive
+			8 = active low level-sensitive
+		*/
+
+		PL_PS_IRQ0_0 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x69 0x04 >;
+		};
+		PL_PS_IRQ0_1 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x6a 0x04 >;
+		};
+		PL_PS_IRQ0_2 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x6b 0x04 >;
+		};
+		PL_PS_IRQ0_3 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x6c 0x04 >;
+		};
+		PL_PS_IRQ0_4 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x6d 0x04 >;
+		};
+		PL_PS_IRQ0_5 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x6e 0x04 >;
+		};
+		PL_PS_IRQ0_6 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x6f 0x04 >;
+		};
+		PL_PS_IRQ0_7 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x70 0x04 >;
+		};
+
+		PL_PS_IRQ1_0 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x78 0x04 >;
+		};
+		PL_PS_IRQ1_1 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x79 0x04 >;
+		};
+		PL_PS_IRQ1_2 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x7a 0x04 >;
+		};
+		PL_PS_IRQ1_3 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x7b 0x04 >;
+		};
+		PL_PS_IRQ1_4 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x7c 0x04 >;
+		};
+		PL_PS_IRQ1_5 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x7d 0x04 >;
+		};
+		PL_PS_IRQ1_6 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x7e 0x04 >;
+		};
+		PL_PS_IRQ1_7 {
+			compatible = "generic-uio";
+			interrupt-parent = < &gic >;
+			interrupts = < 0x01 0x7f 0x04 >;
+		};
+	};
+
+	chosen {
+		bootargs = "earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio";
+	};
+
+	memory {
+		reg = <0x0 0x0 0x0 0x7ff00000>;
+	};
+    reserved-memory {
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+        rpu0vdev0vring0: rpu0vdev0vring0@3ed40000 {
+            no-map;
+            reg = <0x0 0x3ed40000 0x0 0x4000>;
+            };
+        rpu0vdev0vring1: rpu0vdev0vring1@3ed44000 {
+            no-map;
+            reg = <0x0 0x3ed44000 0x0 0x4000>;
+    
+           };
+        rpu0vdev0buffer: rpu0vdev0buffer@3ed48000 {
+            no-map;
+            reg = <0x0 0x3ed48000 0x0 0x100000>;
+    
+           };
+        rproc_0_reserved: rproc@3ed00000 {
+            no-map;
+            reg = <0x0 0x3ed00000 0x0 0x40000>;
+    
+           };
+                  
+    };
+    zynqmp-rpu {
+        compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+        core_conf = "split";
+        reg = <0x0 0xFF9A0000 0x0 0x10000>;
+        r5_0: r5@0 {
+            #address-cells = <2>;
+            #size-cells = <2>;
+            ranges;
+            memory-region = <&rproc_0_reserved>, <&rpu0vdev0buffer>, <&rpu0vdev0vring0>,<&rpu0vdev0vring1>;
+            pnode-id = <0x7>;
+            mboxes = <&ipi_mailbox_rpu0 0>, <&ipi_mailbox_rpu0 1>;
+            mbox-names = "tx", "rx";
+            tcm_0_a: tcm_0@0 {
+                reg = <0x0 0xFFE00000 0x0 0x10000>;
+                pnode-id = <0xf>;
+    
+            };
+            tcm_0_b: tcm_0@1 {
+                reg = <0x0 0xFFE20000 0x0 0x10000>;
+                pnode-id = <0x10>;
+    
+            };
+         
+        };
+      
+    };
+    zynqmp_ipi1 {
+        compatible = "xlnx,zynqmp-ipi-mailbox";
+        interrupt-parent = <&gic>;
+        interrupts = <0 29 4>;
+        xlnx,ipi-id = <7>;
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+        /* APU<->RPU0 IPI mailbox controller */
+        ipi_mailbox_rpu0: mailbox@ff990600 {
+        reg = <0xff990600 0x20>,
+            <0xff990620 0x20>,
+            <0xff9900c0 0x20>,
+            <0xff9900e0 0x20>;
+        reg-names = "local_request_region",
+            "local_response_region",
+            "remote_request_region",
+            "remote_response_region";
+        #mbox-cells = <1>;
+        xlnx,ipi-id = <1>;
+        };
+                  
+    };
+};
+
+&pinctrl0 {
+        status = "okay";
+        pinctrl_i2c0_default: i2c0-default {
+                mux {
+                        groups = "i2c0_1_grp";
+                        function = "i2c0";
+                };
+
+                conf {
+                        groups = "i2c0_1_grp";
+                        bias-pull-up;
+			slew-rate = <SLEW_RATE_SLOW>;
+			io-standard = <IO_STANDARD_LVCMOS18>;
+                };
+        };
+
+        pinctrl_i2c0_gpio: i2c0-gpio {
+                mux {
+                        groups = "gpio0_6_grp", "gpio0_7_grp";
+                        function = "gpio0";
+                };
+
+                conf {
+                        groups = "gpio0_6_grp", "gpio0_7_grp";
+                        slew-rate = <SLEW_RATE_SLOW>;
+                        io-standard = <IO_STANDARD_LVCMOS18>;
+                };
+        };
+
+        pinctrl_i2c1_default: i2c1-default {
+                mux {
+                        groups = "i2c1_2_grp";
+                        function = "i2c1";
+                };
+
+                conf {
+                        groups = "i2c1_2_grp";
+                        bias-pull-up;
+                        slew-rate = <SLEW_RATE_SLOW>;
+                        io-standard = <IO_STANDARD_LVCMOS18>;
+                };
+        };
+
+        pinctrl_i2c1_gpio: i2c1-gpio {
+                mux {
+                        groups = "gpio0_8_grp", "gpio0_9_grp";
+                        function = "gpio0";
+                };
+
+                conf {
+                        groups = "gpio0_8_grp", "gpio0_9_grp";
+                        slew-rate = <SLEW_RATE_SLOW>;
+                        io-standard = <IO_STANDARD_LVCMOS18>;
+                };
+        };
+
+        pinctrl_usb0_default:usb0-default {
+                mux {
+                        groups = "usb0_0_grp";
+                        function = "usb0";
+                };
+
+                conf {
+                        groups = "usb0_0_grp";
+                        slew-rate = <SLEW_RATE_SLOW>;
+                        io-standard = <IO_STANDARD_LVCMOS18>;
+                };
+
+		conf-rx {
+			pins = "MIO52", "MIO53", "MIO55";
+			bias-high-impedance;
+		};
+
+		conf-tx {
+			pins = "MIO54", "MIO56", "MIO57", "MIO58", "MIO59",
+			       "MIO60", "MIO61", "MIO62", "MIO63";
+			bias-disable;
+		};
+        };
+
+	pinctrl_spi0_default:spi0-default {
+		mux {
+			groups = "spi0_2_grp";
+			function = "spi0";
+		};
+
+		conf {
+			groups = "spi0_2_grp";
+			bias-disable;
+                        slew-rate = <SLEW_RATE_SLOW>;
+                        io-standard = <IO_STANDARD_LVCMOS33>;
+		};
+
+                mux-cs {
+
+                        groups = "spi0_ss_6_grp", "spi0_ss_7_grp", "spi0_ss_8_grp";
+                        function = "spi0_ss";
+                };
+
+                conf-cs {
+
+                        groups = "spi0_ss_6_grp", "spi0_ss_7_grp", "spi0_ss_8_grp";
+                        bias-disable;
+                };
+
+	};
+};
+
+&i2c0 {
+	status = "okay";
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_i2c0_default>;
+	pinctrl-1 = <&pinctrl_i2c0_gpio>;
+};
+
+&i2c1 {
+        status = "okay";
+        pinctrl-names = "default", "gpio";
+        pinctrl-0 = <&pinctrl_i2c1_default>;
+        pinctrl-1 = <&pinctrl_i2c1_gpio>;
+};
+&usb0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usb0_default>;
+};
+
+&dwc3_0 {
+	status = "okay";
+	dr_mode = "host";
+	snps,usb3_1pm_capable;
+	phy-names = "usb2-phy";
+	maximum-speed = "high-speed";
+};
+&gem0{
+    phy-mode = "gmii";
+    status = "okay";
+    fixed-link {
+    speed = <1000>;
+    full-duplex = <1>;
+    /* reg = <1>; */
+    };
+};
+
+
